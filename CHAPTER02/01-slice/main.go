@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
 // 슬라이스 내부 정의
 // 포인터의 메모리 주소값이 복사
@@ -18,7 +21,7 @@ func main() {
 	}
 	fmt.Println()
 
-	//var array = [...]int{10, 20, 30, 40, 50} // 길이가 3인 고정 배열
+	//var array = [...]int{10, 20, 30, 40, 50} // 길이가 5인 고정 배열
 	var slice1 = []int{10, 20, 30, 40, 50} // 슬라이스 선언
 	var slice2 = []int{1, 5: 2, 10: 3}     // [1 0 0 0 0 2 0 0 0 0 3]
 	fmt.Println(slice1, slice2)
@@ -67,4 +70,63 @@ func main() {
 	slice = array[1:2]
 	fmt.Println("array:", array)
 	fmt.Println("slice:", slice, len(slice), cap(slice))
+	fmt.Println()
+
+	//// 슬라이스를 슬라이싱
+	//x := []int{1, 2, 3, 4, 5} // len: 5, cap: 5
+	//y := x[1:2]               // len: 1, cap: 4
+	//front := x[:3]            // 처음부터 슬라이싱
+	//back := x[2:len(x)]       // 끝까지 슬라이싱 (== x[2:])
+	//all := x[:]               // 전체 슬라이싱
+
+	// 슬라이스 복제
+	x := []int{1, 2, 3, 4, 5}
+	//y := make([]int, len(x))
+	//
+	//for i, v := range x {
+	//	y[i] = v
+	//}
+
+	//y := append([]int{}, x...)
+
+	y := make([]int, len(x))
+	copy(y, x)
+
+	x[0] = 100
+	fmt.Println(x, y)
+	fmt.Println()
+
+	// 요소 삭제
+	idx := 0
+	//for i := idx + 1; i < len(x); i++ {
+	//	x[i-1] = x[i]
+	//}
+	//x = x[:len(x)-1] // 슬라이스 마지막 요소 삭제
+
+	x = append(x[:idx], x[idx+1:]...)
+
+	fmt.Println(x)
+	fmt.Println()
+
+	// 요소 추가
+	//x = append(x, 0)
+	//for i := len(x) - 1; i > idx; i-- {
+	//	x[i] = x[i-1]
+	//}
+	//x[idx] = 1
+
+	//x = append(x[:idx], append([]int{1}, x[idx:]...)...)
+
+	// 메모리 낭비 줄이기
+	x = append(x, 0)
+	copy(x[idx+1:], x[idx:])
+	x[idx] = 1
+
+	fmt.Println(x)
+	fmt.Println()
+
+	// 슬라이스 정렬
+	s := []int{5, 4, 3, 2, 1}
+	sort.Ints(s)
+	fmt.Println(s)
 }
